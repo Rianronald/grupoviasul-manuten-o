@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Compras — Manutenção</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f5f7;
+    --panel:#ffffff;
+    --panel2:#f0f1f4;
+    --line:#e0e2e8;
+    --line-soft:#e8e9ee;
+    --text:#22262e;
+    --text-dim:#666d7a;
+    --text-faint:#9aa0ac;
+    --amber:#3a3f47;
+    --amber-dim:#3a3f4712;
+    --accent:#2b2f38;
+    --warn:#c0392b;
+    --warn-dim:#c0392b14;
+    --ok:#1f8a5f;
+
+    --c-eletrico:#b8860b;
+    --c-ferramentas:#c1571a;
+    --c-bombas:#2874a6;
+    --c-banheiro:#7d3c98;
+    --c-agua:#148f77;
+    --c-conexoes:#2e8b4f;
+    --c-isopor:#b0225e;
+    --c-geral:#5d6d7e;
+
+    --radius:10px;
+    --mono: 'JetBrains Mono', monospace;
+    --disp: 'Oswald', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    min-height:100vh;
+    line-height:1.5;
+  }
+
+  a{color:inherit;}
+
+  /* ===== HEADER ===== */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:rgba(255,255,255,0.96);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto; padding:18px 24px 16px;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
+    color:var(--accent); text-transform:uppercase; font-weight:700;
+    display:flex; align-items:center; gap:8px; margin-bottom:6px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
+  .logo-row{display:flex; align-items:center; gap:12px; margin-bottom:14px;}
+  .logo-row img{height:38px; width:auto; display:block;}
+  .logo-divider{width:1px; height:28px; background:var(--line);}
+  h1{
+    font-family:var(--disp); font-weight:700; font-size:clamp(26px,4vw,38px);
+    margin:0 0 4px; letter-spacing:.01em; text-transform:uppercase;
+  }
+  .subtitle{color:var(--text-dim); font-size:14.5px; max-width:680px; margin:0 0 18px;}
+
+  .search-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .search-wrap{
+    position:relative; flex:1 1 320px; min-width:260px;
+  }
+  .search-wrap svg{position:absolute; left:14px; top:50%; transform:translateY(-50%); width:17px; height:17px; stroke:var(--text-faint);}
+  #search{
+    width:100%; background:var(--panel); border:1.5px solid var(--line); color:var(--text);
+    font-family:var(--body); font-size:15px; padding:12px 14px 12px 40px; border-radius:8px;
+    outline:none; transition:border-color .15s, box-shadow .15s;
+  }
+  #search::placeholder{color:var(--text-faint);}
+  #search:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--amber-dim);}
+  .result-count{font-family:var(--mono); font-size:12px; color:var(--text-faint); white-space:nowrap; padding:0 4px;}
+
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;}
+  .chip{
+    font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:.02em;
+    padding:7px 12px 7px 10px; border-radius:20px; border:1.5px solid var(--line);
+    background:var(--panel); color:var(--text-dim); cursor:pointer; user-select:none;
+    display:flex; align-items:center; gap:7px; transition:all .12s;
+  }
+  .chip .sw{width:9px;height:9px;border-radius:50%; flex:none;}
+  .chip:hover{border-color:var(--text-faint); color:var(--text);}
+  .chip.active{background:var(--panel2); color:var(--text); border-color:currentColor;}
+
+  /* ===== MAIN LAYOUT ===== */
+  main{max-width:1180px; margin:0 auto; padding:28px 24px 80px;}
+
+  section{margin-bottom:40px;}
+  .section-head{display:flex; align-items:baseline; gap:10px; margin-bottom:14px;}
+  .section-head .idx{font-family:var(--mono); color:var(--text-faint); font-size:13px;}
+  .section-head h2{
+    font-family:var(--disp); text-transform:uppercase; letter-spacing:.03em;
+    font-size:19px; margin:0; font-weight:600;
+  }
+  .section-desc{color:var(--text-dim); font-size:13.5px; margin:-6px 0 16px;}
+
+  /* ===== RULES / FLOW ===== */
+  .rules-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px;}
+  .rule-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 16px 15px; position:relative; overflow:hidden;
+  }
+  .rule-card::before{
+    content:""; position:absolute; top:0; left:0; width:100%; height:3px;
+    background:var(--accent);
+  }
+  .rule-card.warn::before{background:var(--warn);}
+  .rule-num{font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:700; letter-spacing:.08em; margin-bottom:8px; display:block;}
+  .rule-card.warn .rule-num{color:var(--warn);}
+  .rule-title{font-weight:700; font-size:14.5px; margin:0 0 6px;}
+  .rule-body{font-size:13.5px; color:var(--text-dim); margin:0;}
+  .rule-body b{color:var(--text); font-weight:600;}
+  .rule-body .tag{
+    display:inline-block; font-family:var(--mono); font-size:11px; font-weight:700;
+    background:var(--amber-dim); color:var(--amber); padding:1px 6px; border-radius:4px; margin:1px 2px;
+  }
+
+  .flow{
+    display:flex; align-items:stretch; gap:0; flex-wrap:wrap;
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px;
+  }
+  .flow-step{
+    flex:1 1 160px; display:flex; flex-direction:column; gap:6px; padding:8px 18px; position:relative; min-width:150px;
+  }
+  .flow-step:not(:last-child)::after{
+    content:"→"; position:absolute; right:-4px; top:50%; transform:translateY(-50%);
+    color:var(--text-faint); font-size:18px; font-family:var(--mono);
+  }
+  .flow-step .fnum{
+    width:26px; height:26px; border-radius:50%; background:var(--amber-dim); color:var(--amber);
+    font-family:var(--mono); font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center;
+  }
+  .flow-step .ftext{font-size:13px; color:var(--text-dim); line-height:1.4;}
+  .flow-step .ftext b{color:var(--text);}
+
+  /* ===== SUPPLIER GRID ===== */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px;}
+
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 16px 15px 18px; position:relative; border-left-width:5px; border-left-style:solid;
+    transition:transform .12s, box-shadow .12s; box-shadow:0 1px 2px rgba(20,20,25,0.04);
+  }
+  .card:hover{transform:translateY(-2px); box-shadow:0 6px 16px rgba(20,20,25,0.08);}
+  .card.hidden{display:none;}
+
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:4px;}
+  .card-name{font-family:var(--disp); font-size:18px; font-weight:600; text-transform:uppercase; letter-spacing:.01em; margin:0;}
+  .card-cat{
+    font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    padding:3px 8px; border-radius:20px; white-space:nowrap; flex:none;
+  }
+
+  .badges{display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 10px;}
+  .badge{
+    font-family:var(--mono); font-size:10.5px; font-weight:700; padding:3px 7px; border-radius:5px;
+    display:inline-flex; align-items:center; gap:4px;
+  }
+  .badge.principal{background:var(--amber-dim); color:var(--amber);}
+  .badge.aprovacao{background:var(--warn-dim); color:var(--warn);}
+  .badge.cotacao{background:#5d6d7e14; color:#5d6d7e;}
+
+  .card-desc{font-size:13.5px; color:var(--text-dim); margin:0 0 12px; line-height:1.5;}
+
+  .item-tags{display:flex; flex-wrap:wrap; gap:5px; margin:0 0 12px;}
+  .item-tag{
+    font-family:var(--mono); font-size:10.5px; color:var(--text-faint);
+    background:var(--panel2); border:1px solid var(--line-soft); padding:2px 7px; border-radius:5px;
+  }
+
+  .contacts{display:flex; flex-direction:column; gap:7px;}
+  .contact-row{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    background:var(--panel2); border:1px solid var(--line-soft); border-radius:7px; padding:8px 10px;
+  }
+  .contact-info{display:flex; flex-direction:column; gap:1px; min-width:0;}
+  .contact-person{font-size:12px; color:var(--text-dim); font-weight:600;}
+  .contact-phone{font-family:var(--mono); font-size:14px; font-weight:600; letter-spacing:.02em;}
+  .contact-actions{display:flex; gap:6px; flex:none;}
+  .icon-btn{
+    width:30px; height:30px; border-radius:6px; border:1px solid var(--line);
+    background:var(--panel); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--text-dim); transition:all .12s; text-decoration:none;
+  }
+  .icon-btn:hover{border-color:var(--accent); color:var(--accent);}
+  .icon-btn svg{width:14px; height:14px;}
+  .icon-btn.copied{border-color:var(--ok); color:var(--ok);}
+  .icon-btn.whatsapp:hover{border-color:#25D366; color:#25D366;}
+
+  .empty{
+    text-align:center; padding:50px 20px; color:var(--text-faint); display:none;
+  }
+  .empty.show{display:block;}
+  .empty b{color:var(--text-dim);}
+
+  /* ===== INSTALL BANNER ===== */
+  .install-banner{
+    display:none; align-items:center; justify-content:space-between; gap:12px;
+    background:var(--accent); color:#fff; padding:10px 16px; font-size:13px;
+    font-family:var(--body);
+  }
+  .install-banner.show{display:flex;}
+  .install-banner button{
+    font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:.03em;
+    background:#fff; color:var(--accent); border:none; padding:7px 12px; border-radius:6px; cursor:pointer;
+  }
+  .install-banner .dismiss{
+    background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.4); margin-left:6px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer{
+    max-width:1180px; margin:0 auto; padding:20px 24px 50px; color:var(--text-faint); font-size:12.5px;
+    border-top:1px solid var(--line); padding-top:22px;
+  }
+  footer b{color:var(--text-dim);}
+
+  @media (max-width:640px){
+    .flow-step:not(:last-child)::after{display:none;}
+    .flow{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div class="install-banner" id="installBanner">
+  <span>Instale este app na tela inicial para acesso rápido, mesmo sem internet.</span>
+  <span>
+    <button id="installBtn">Instalar</button>
+    <button class="dismiss" id="dismissBtn">Agora não</button>
+  </span>
+</div>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo-row">
+      <img src="data:image/png;base64,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" alt="Grupo Via 1">
+      <div class="logo-divider"></div>
+      <div class="eyebrow"><span class="dot"></span>Guia de cobertura de férias</div>
+    </div>
+    <h1>Central de Compras — Manutenção</h1>
+    <p class="subtitle">Todos os fornecedores usados pela manutenção, com contato direto e a regra de quando usar cada um. Use a busca abaixo para achar rápido — funciona por nome, categoria, telefone ou nome da pessoa de contato.</p>
+
+    <div class="search-row">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search" type="search" placeholder="Buscar por item, fornecedor, categoria, contato ou telefone…" autocomplete="off">
+      </div>
+      <span class="result-count" id="resultCount"></span>
+    </div>
+
+    <div class="chips" id="chips"></div>
+  </div>
+</div>
+
+<main>
+
+  <section id="rulesSection">
+    <div class="section-head"><span class="idx">01</span><h2>Regras gerais de compra</h2></div>
+    <p class="section-desc">Leia isto antes de fazer qualquer pedido. São as 3 regras que a pessoa titular sempre segue.</p>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <span class="rule-num">REGRA 01 — VALOR MÍNIMO</span>
+        <p class="rule-title">Fornecedores têm faturamento mínimo</p>
+        <p class="rule-body">A maioria dos fornecedores só fatura pedidos a partir de <b>R$ 50</b> ou <b>R$ 100</b>. Alguns exigem no mínimo <b>R$ 300</b>. Antes de fechar um pedido pequeno, confirme com o fornecedor se o valor bate o mínimo — se não bater, é preciso incluir mais itens no mesmo pedido.</p>
+      </div>
+      <div class="rule-card">
+        <span class="rule-num">REGRA 02 — ITEM BARATO</span>
+        <p class="rule-title">Onde comprar itens muito baratos</p>
+        <p class="rule-body">Para itens de valor muito baixo, a prioridade é: <span class="tag">VAMOR</span> como primeira opção geral. Se o item barato for <b>material elétrico</b>, a prioridade passa a ser <span class="tag">PJNeblina</span>.</p>
+      </div>
+      <div class="rule-card">
+        <span class="rule-num">REGRA 03 — MATERIAL ELÉTRICO</span>
+        <p class="rule-title">Ordem de busca para elétrica</p>
+        <p class="rule-body">Material elétrico é <b>sempre</b> cotado primeiro na <span class="tag">PJNeblina</span> (fornecedor principal). Só se ela não tiver o item disponível, cote em <span class="tag">JAGUAR</span> e <span class="tag">MAFEMA</span> antes de fechar com outro fornecedor.</p>
+      </div>
+      <div class="rule-card warn">
+        <span class="rule-num">REGRA 04 — APROVAÇÃO</span>
+        <p class="rule-title">Pedidos que precisam de aprovação</p>
+        <p class="rule-body">Pedidos feitos na <b>Ferreira Costa</b> e na <b>Loja do Condomínio</b> só podem ser fechados depois que a <b>Nalini</b> aprovar. Envie o pedido para ela antes de confirmar com o fornecedor.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="flowSection">
+    <div class="section-head"><span class="idx">02</span><h2>Fluxo rápido — material elétrico</h2></div>
+    <p class="section-desc">Passo a passo de decisão para o caso mais comum: precisa de material elétrico, e agora?</p>
+    <div class="flow">
+      <div class="flow-step">
+        <span class="fnum">1</span>
+        <span class="ftext">Precisa de <b>material elétrico</b>?</span>
+      </div>
+      <div class="flow-step">
+        <span class="fnum">2</span>
+        <span class="ftext">Ligue primeiro para <b>PJNeblina (Jairo)</b> — é o fornecedor principal</span>
+      </div>
+      <div class="flow-step">
+        <span class="fnum">3</span>
+        <span class="ftext">Não tem em estoque? Cote com <b>Jaguar</b> e <b>Mafema</b></span>
+      </div>
+      <div class="flow-step">
+        <span class="fnum">4</span>
+        <span class="ftext">É <b>drive ou iluminação específica</b>? Vá direto na <b>MODEON</b></span>
+      </div>
+      <div class="flow-step">
+        <span class="fnum">5</span>
+        <span class="ftext">Item muito barato? Priorize <b>PJNeblina</b></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="grid-section">
+    <div class="section-head"><span class="idx">03</span><h2 id="gridTitle">Fornecedores</h2></div>
+    <p class="section-desc" id="gridDesc">16 fornecedores cadastrados. Além do nome, dá para buscar por item (ex: "cabo pp", "dispenser de sabonete líquido"). Clique no telefone para ligar, no WhatsApp para chamar, ou copie o número.</p>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty">Nenhum fornecedor encontrado para <b id="emptyTerm"></b>. Tente outro termo ou limpe o filtro de categoria.</div>
+  </section>
+
+</main>
+
+<footer>
+  Dashboard feito para cobrir as férias — baseado no tutorial original de compras da manutenção. Em caso de dúvida sobre algum pedido, confirme com <b>Nalini</b>. Dados de contato sujeitos a mudança — se um número não atender, verifique se não mudou.
+</footer>
+
+<script>
+const CATEGORIES = {
+  eletrico:    { label: "Elétrico",              color: "var(--c-eletrico)" },
+  ferramentas: { label: "Ferramentas",           color: "var(--c-ferramentas)" },
+  bombas:      { label: "Bombas",                color: "var(--c-bombas)" },
+  banheiro:    { label: "Banheiro / Específico", color: "var(--c-banheiro)" },
+  agua:        { label: "Purificadores de Água", color: "var(--c-agua)" },
+  conexoes:    { label: "Mangueiras / Conexões", color: "var(--c-conexoes)" },
+  isopor:      { label: "Isopor",                color: "var(--c-isopor)" },
+  geral:       { label: "Geral / Avulso",        color: "var(--c-geral)" },
+};
+
+const SUPPLIERS = [
+  {
+    name: "PJNeblina", cat: "eletrico",
+    desc: "Principal fornecedor de material elétrico. É sempre o primeiro lugar para procurar qualquer item elétrico.",
+    badges: ["principal"],
+    keywords: ["cabo", "cabo pp", "fio", "fiação", "disjuntor", "tomada", "interruptor", "lâmpada", "reator", "soquete", "fita isolante", "eletroduto", "conduíte", "conector elétrico", "extensão elétrica", "plugue", "quadro elétrico", "terminal elétrico"],
+    contacts: [{ person: "Jairo", phone: "81 8894-1374" }]
+  },
+  {
+    name: "Mafema", cat: "eletrico",
+    desc: "Material elétrico. Usado para cotação quando a PJNeblina não tem o item disponível.",
+    badges: ["cotacao"],
+    keywords: ["cabo", "cabo pp", "fio", "fiação", "disjuntor", "tomada", "interruptor", "lâmpada", "reator", "eletroduto", "conector elétrico"],
+    contacts: [{ person: "Antônio", phone: "81 8474-6445" }]
+  },
+  {
+    name: "Jaguar", cat: "eletrico",
+    desc: "Material elétrico. Usado para cotação quando a PJNeblina não tem o item disponível.",
+    badges: ["cotacao"],
+    keywords: ["cabo", "cabo pp", "fio", "fiação", "disjuntor", "tomada", "interruptor", "lâmpada", "reator", "eletroduto", "conector elétrico"],
+    contacts: [{ person: "Lúcio", phone: "81 8109-5627" }]
+  },
+  {
+    name: "MODEON", cat: "eletrico",
+    desc: "Drives e iluminação específica — itens que os outros fornecedores elétricos não costumam ter.",
+    badges: [],
+    keywords: ["drive", "inversor de frequência", "soft starter", "refletor led", "luminária técnica", "iluminação especial"],
+    contacts: [{ person: null, phone: "81 8607-8016" }]
+  },
+  {
+    name: "F.Costa (Ferreira Costa)", cat: "banheiro",
+    desc: "Alguns materiais elétricos, itens de banheiro e itens específicos.",
+    badges: ["aprovacao"],
+    keywords: ["dispenser de sabonete líquido", "sabonete líquido", "papel higiênico", "papel toalha", "torneira", "registro", "sifão", "válvula", "assento sanitário", "chuveiro", "ferragens", "material de construção", "bomba", "bomba d'água"],
+    contacts: [
+      { person: "Rafael", phone: "81 9306-8386" },
+      { person: "Ricardo", phone: "81 8505-3496" }
+    ]
+  },
+  {
+    name: "Tupan", cat: "geral",
+    desc: "Fornecedor de itens gerais, sem categoria específica.",
+    badges: [],
+    keywords: ["itens diversos", "materiais de manutenção em geral"],
+    contacts: [{ person: null, phone: "81 99496-638" }]
+  },
+  {
+    name: "Mundo das Conexões", cat: "conexoes",
+    desc: "Mangueiras e conexões para mangueiras.",
+    badges: [],
+    keywords: ["mangueira", "conexão de mangueira", "engate rápido", "abraçadeira", "esguicho", "registro de mangueira"],
+    contacts: [{ person: "Emidio", phone: "81 3376-9099" }]
+  },
+  {
+    name: "Divimulti", cat: "isopor",
+    desc: "Material de isopor.",
+    badges: [],
+    keywords: ["isopor", "chapa de isopor", "placa de isopor", "embalagem de isopor"],
+    contacts: [{ person: null, phone: "81 3326-1566" }]
+  },
+  {
+    name: "Agua.com", cat: "agua",
+    desc: "Qualquer material relacionado a purificadores de água.",
+    badges: [],
+    keywords: ["purificador de água", "filtro de água", "refil", "bebedouro", "elemento filtrante"],
+    contacts: [{ person: null, phone: "81 9990-4200" }]
+  },
+  {
+    name: "Coral", cat: "banheiro",
+    desc: "Itens básicos e de banheiro.",
+    badges: [],
+    keywords: ["dispenser de sabonete líquido", "sabonete líquido", "papel higiênico", "papel toalha", "lixeira", "suporte", "torneira básica"],
+    contacts: [{ person: "Ronaldo", phone: "81 9293-3642" }]
+  },
+  {
+    name: "VAMOR", cat: "geral",
+    desc: "Itens avulsos em geral. É a primeira opção quando o item é muito barato (ver Regra 02).",
+    badges: ["principal"],
+    keywords: ["itens avulsos", "miudezas", "parafuso", "fita adesiva", "itens baratos"],
+    contacts: [{ person: "Gisele", phone: "81 9974-7267" }]
+  },
+  {
+    name: "Ativa Soluções", cat: "geral",
+    desc: "Itens ultra específicos que não são encontrados em nenhum outro fornecedor da lista.",
+    badges: [],
+    keywords: ["item específico", "peça sob encomenda", "item raro", "item difícil de achar"],
+    contacts: [{ person: null, phone: "81 9379-1717" }]
+  },
+  {
+    name: "Loja do Condomínio", cat: "banheiro",
+    desc: "Itens de banheiro e específicos. Funciona como alternativa à Ferreira Costa.",
+    badges: ["aprovacao"],
+    keywords: ["dispenser de sabonete líquido", "sabonete líquido", "papel higiênico", "torneira", "registro", "sifão", "bomba", "bomba d'água"],
+    contacts: [{ person: "Conceição", phone: "81 9672-0148" }]
+  },
+  {
+    name: "Palma Ferramentas", cat: "ferramentas",
+    desc: "Ferramentas em geral. Usada como opção de cotação.",
+    badges: ["cotacao"],
+    keywords: ["ferramenta", "furadeira", "parafusadeira", "chave de fenda", "chave allen", "alicate", "martelo", "serra", "trena", "nível"],
+    contacts: [{ person: "Tania", phone: "81 9607-8204" }]
+  },
+  {
+    name: "Ponto das Ferramentas", cat: "ferramentas",
+    desc: "Ferramentas em geral.",
+    badges: [],
+    keywords: ["ferramenta", "furadeira", "parafusadeira", "chave de fenda", "chave allen", "alicate", "martelo", "serra", "trena", "nível"],
+    contacts: [{ person: null, phone: "81 8799-3043" }]
+  },
+  {
+    name: "Hidrovital", cat: "bombas",
+    desc: "Principal fornecedor de bombas.",
+    badges: ["principal"],
+    keywords: ["bomba d'água", "bomba de recalque", "motor de bomba", "bomba submersa", "selo mecânico", "peça de bomba"],
+    contacts: [{ person: null, phone: "81 8552-5470" }]
+  },
+];
+
+const BADGE_META = {
+  principal: { label: "Fornecedor principal", cls: "principal" },
+  aprovacao: { label: "Precisa aprovação da Nalini", cls: "aprovacao" },
+  cotacao:   { label: "Opção de cotação", cls: "cotacao" },
+};
+
+const chipsEl = document.getElementById('chips');
+const gridEl = document.getElementById('grid');
+const searchEl = document.getElementById('search');
+const emptyEl = document.getElementById('empty');
+const emptyTermEl = document.getElementById('emptyTerm');
+const resultCountEl = document.getElementById('resultCount');
+
+let activeCat = 'all';
+
+function buildChips(){
+  const all = document.createElement('div');
+  all.className = 'chip active';
+  all.dataset.cat = 'all';
+  all.innerHTML = `<span class="sw" style="background:var(--accent)"></span>Todos (${SUPPLIERS.length})`;
+  all.onclick = () => setCat('all');
+  chipsEl.appendChild(all);
+
+  Object.entries(CATEGORIES).forEach(([key, meta]) => {
+    const count = SUPPLIERS.filter(s => s.cat === key).length;
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.dataset.cat = key;
+    chip.style.color = meta.color;
+    chip.innerHTML = `<span class="sw" style="background:${meta.color}"></span>${meta.label} (${count})`;
+    chip.onclick = () => setCat(key);
+    chipsEl.appendChild(chip);
+  });
+}
+
+function setCat(cat){
+  activeCat = cat;
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.cat === cat));
+  render();
+}
+
+function telHref(phone){
+  return 'tel:+55' + phone.replace(/\D/g,'');
+}
+
+function waHref(phone){
+  return 'https://wa.me/55' + phone.replace(/\D/g,'');
+}
+
+function copyPhone(phone, btn){
+  navigator.clipboard.writeText(phone).then(() => {
+    btn.classList.add('copied');
+    const original = btn.innerHTML;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = original; }, 1400);
+  });
+}
+
+function normalizeText(str){
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove acentos
+    .toLowerCase()
+    .trim();
+}
+
+function matches(supplier, term){
+  if(!term) return true;
+  const haystack = normalizeText([
+    supplier.name,
+    CATEGORIES[supplier.cat].label,
+    supplier.desc,
+    ...supplier.contacts.map(c => c.person || ''),
+    ...supplier.contacts.map(c => c.phone),
+    ...(supplier.keywords || []),
+  ].join(' '));
+
+  const words = normalizeText(term).split(/\s+/).filter(Boolean);
+  return words.every(w => haystack.includes(w));
+}
+
+function buildCard(s){
+  const meta = CATEGORIES[s.cat];
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.borderLeftColor = meta.color;
+  card.dataset.name = s.name;
+
+  const badgesHtml = s.badges.map(b => {
+    const bm = BADGE_META[b];
+    return `<span class="badge ${bm.cls}">${bm.label}</span>`;
+  }).join('');
+
+  const contactsHtml = s.contacts.map(c => `
+    <div class="contact-row">
+      <div class="contact-info">
+        ${c.person ? `<span class="contact-person">${c.person}</span>` : ''}
+        <span class="contact-phone">${c.phone}</span>
+      </div>
+      <div class="contact-actions">
+        <a class="icon-btn" href="${telHref(c.phone)}" title="Ligar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </a>
+        ${c.phone ? `
+        <a class="icon-btn whatsapp" href="${waHref(c.phone)}" title="Chamar no WhatsApp" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.86.505 3.65 1.462 5.212L2 22l4.911-1.436A9.941 9.941 0 0 0 12.001 22C17.523 22 22 17.523 22 12S17.523 2 12.001 2zm0 18.09c-1.6 0-3.14-.43-4.478-1.242l-.322-.19-2.914.852.87-2.858-.207-.33A8.076 8.076 0 0 1 3.91 12c0-4.465 3.626-8.09 8.091-8.09 4.464 0 8.09 3.625 8.09 8.09 0 4.465-3.626 8.09-8.09 8.09z"/></svg>
+        </a>` : ''}
+        <button class="icon-btn" title="Copiar número" onclick="copyPhone('${c.phone}', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  const itemsHtml = (s.keywords && s.keywords.length)
+    ? `<div class="item-tags">${s.keywords.slice(0,6).map(k => `<span class="item-tag">${k}</span>`).join('')}</div>`
+    : '';
+
+  card.innerHTML = `
+    <div class="card-top">
+      <p class="card-name">${s.name}</p>
+      <span class="card-cat" style="background:${meta.color}22; color:${meta.color}">${meta.label}</span>
+    </div>
+    ${badgesHtml ? `<div class="badges">${badgesHtml}</div>` : ''}
+    <p class="card-desc">${s.desc}</p>
+    ${itemsHtml}
+    <div class="contacts">${contactsHtml}</div>
+  `;
+  return card;
+}
+
+const rulesSection = document.getElementById('rulesSection');
+const flowSection = document.getElementById('flowSection');
+const gridTitle = document.getElementById('gridTitle');
+let wasSearching = false;
+
+function render(){
+  const term = searchEl.value.trim();
+  const isSearching = term.length > 0;
+
+  gridEl.innerHTML = '';
+  let visible = 0;
+
+  SUPPLIERS.forEach(s => {
+    const catOk = activeCat === 'all' || s.cat === activeCat;
+    const searchOk = matches(s, term);
+    if(catOk && searchOk){
+      gridEl.appendChild(buildCard(s));
+      visible++;
+    }
+  });
+
+  emptyEl.classList.toggle('show', visible === 0);
+  emptyTermEl.textContent = term ? `"${term}"` : 'esse filtro';
+  resultCountEl.textContent = visible === SUPPLIERS.length ? '' : `${visible} de ${SUPPLIERS.length} fornecedores`;
+
+  // Enquanto o usuário está buscando, some com Regras/Fluxo para o resultado
+  // aparecer imediatamente na tela, sem precisar rolar a página.
+  rulesSection.style.display = isSearching ? 'none' : '';
+  flowSection.style.display = isSearching ? 'none' : '';
+  gridTitle.textContent = isSearching ? `Resultados para "${term}"` : 'Fornecedores';
+
+  if(isSearching && !wasSearching){
+    document.getElementById('grid-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  wasSearching = isSearching;
+}
+
+buildChips();
+render();
+searchEl.addEventListener('input', render);
+
+// ===== PWA: instalação e service worker =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(err => {
+      console.warn('Falha ao registrar service worker:', err);
+    });
+  });
+}
+
+let deferredInstallPrompt = null;
+const installBanner = document.getElementById('installBanner');
+const installBtn = document.getElementById('installBtn');
+const dismissBtn = document.getElementById('dismissBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if (!localStorage.getItem('installDismissed')) {
+    installBanner.classList.add('show');
+  }
+});
+
+installBtn && installBtn.addEventListener('click', async () => {
+  installBanner.classList.remove('show');
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+  }
+});
+
+dismissBtn && dismissBtn.addEventListener('click', () => {
+  installBanner.classList.remove('show');
+  localStorage.setItem('installDismissed', '1');
+});
+
+window.addEventListener('appinstalled', () => {
+  installBanner.classList.remove('show');
+});
+</script>
+
+</body>
+</html>
