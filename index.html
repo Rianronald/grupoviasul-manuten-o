@@ -211,6 +211,32 @@
   .empty.show{display:block;}
   .empty b{color:var(--text-dim);}
 
+  /* ===== MATERIALS CATALOG ===== */
+  .mat-note{
+    background:var(--warn-dim); border:1px solid var(--warn); border-left-width:4px; border-radius:8px;
+    padding:10px 14px; font-size:13px; color:var(--text); margin-bottom:16px;
+  }
+  .mat-note b{color:var(--warn);}
+  .materials-list{display:flex; flex-direction:column; gap:10px;}
+  .material-row{
+    background:var(--panel); border:1px solid var(--line); border-left-width:5px; border-left-style:solid;
+    border-radius:var(--radius); padding:14px 16px;
+  }
+  .material-row.hidden{display:none;}
+  .material-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px;}
+  .material-name{font-family:var(--disp); font-weight:600; font-size:15.5px; text-transform:uppercase; margin:0; letter-spacing:.01em;}
+  .material-cat{
+    font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    padding:3px 8px; border-radius:20px; white-space:nowrap; flex:none;
+  }
+  .material-specs{font-size:13px; color:var(--text-dim); margin:0 0 9px; line-height:1.5;}
+  .material-brands{display:flex; flex-wrap:wrap; gap:5px; margin:0 0 10px;}
+  .material-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  .material-supplier{
+    font-family:var(--mono); font-size:12px; font-weight:700; background:var(--amber-dim); color:var(--amber);
+    padding:5px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:6px;
+  }
+
   /* ===== INSTALL BANNER ===== */
   .install-banner{
     display:none; align-items:center; justify-content:space-between; gap:12px;
@@ -254,7 +280,7 @@
     <div class="logo-row">
       <img src="data:image/png;base64,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" alt="Grupo Via 1">
       <div class="logo-divider"></div>
-      <div class="eyebrow"><span class="dot"></span>Guia de cobertura de férias</div>
+      <div class="eyebrow"><span class="dot"></span>GUIA COMPLETO - MANUTENÇÃO</div>
     </div>
     <h1>Central de Compras — Manutenção</h1>
     <p class="subtitle">Todos os fornecedores usados pela manutenção, com contato direto e a regra de quando usar cada um. Use a busca abaixo para achar rápido — funciona por nome, categoria, telefone ou nome da pessoa de contato.</p>
@@ -332,6 +358,18 @@
     <p class="section-desc" id="gridDesc">16 fornecedores cadastrados. Além do nome, dá para buscar por item (ex: "cabo pp", "dispenser de sabonete líquido"). Clique no telefone para ligar, no WhatsApp para chamar, ou copie o número.</p>
     <div class="grid" id="grid"></div>
     <div class="empty" id="empty">Nenhum fornecedor encontrado para <b id="emptyTerm"></b>. Tente outro termo ou limpe o filtro de categoria.</div>
+  </section>
+
+  <section id="materialsSection">
+    <div class="section-head"><span class="idx">04</span><h2>Catálogo de Materiais por Item</h2></div>
+    <p class="section-desc">Consulta rápida por item: especificação técnica, marcas usadas e fornecedor a priorizar. Baseado no levantamento de 313 notas fiscais do Grupo VIA1.</p>
+
+    <div class="mat-note"><b>Observação de cotação:</b> a MODEON é sempre o último caso — só cote com ela se nenhum outro fornecedor listado tiver o item disponível.</div>
+
+    <div class="chips" id="matChips"></div>
+
+    <div class="materials-list" id="materialsList"></div>
+    <div class="empty" id="materialsEmpty">Nenhum material encontrado para <b id="materialsEmptyTerm"></b>.</div>
   </section>
 
 </main>
@@ -476,14 +514,68 @@ const BADGE_META = {
   cotacao:   { label: "Opção de cotação", cls: "cotacao" },
 };
 
+const MATERIAL_CATEGORIES = {
+  eletrica:    { label: "Elétrica, Iluminação e Conectores",          color: "#b8860b" },
+  hidraulica:  { label: "Hidráulica, Sanitários e Bombas",            color: "#2874a6" },
+  pneumatica:  { label: "Pneumática, Lavagem e Compressores",         color: "#8e44ad" },
+  ferragens:   { label: "Ferragens, Fixação, Vedação e Ferramentas",  color: "#c1571a" },
+  higiene:     { label: "Higiene, Purificadores e Conforto",          color: "#148f77" },
+};
+
+const MATERIALS = [
+  // 1. Elétrica, Iluminação e Conectores
+  { cat:"eletrica", item:"Painel LED Quadrado", specs:"18W, formato quadrado de embutir/sobrepor, 6500K (luz fria/branca), ~1250 lúmens, ultrafino.", brands:["Dilux","Avant"], supplier:"Vamor / Coral (Modeon como último caso)" },
+  { cat:"eletrica", item:"Lâmpadas LED (Bulbo / Tubular)", specs:"LED Bulbo 11W e 13W (E27) e Lâmpadas Tubulares LED T8 (9W / 18W / 20W - 60cm e 120cm).", brands:["Philips","Dilux","Osram"], supplier:"Coral / Vamor (Modeon como último caso)" },
+  { cat:"eletrica", item:"Refletores LED", specs:"100W e 200W IP65/IP66 (para pátios externos, lavagem e funilaria).", brands:["Avant","Elgin"], supplier:"Vamor / PJ Neblina / Coral" },
+  { cat:"eletrica", item:"Filtros de Linha / Extensões", specs:"Réguas de 4 a 6 tomadas com fusível/chave reset, cabo PP 3x1,5mm² de 1,5m a 10m (10A e 20A).", brands:["Forceline","Margirius"], supplier:"Vamor / PJ Neblina / Coral" },
+  { cat:"eletrica", item:"Conectores de Emenda", specs:"Conectores de engate rápido de 2, 3 e 5 polos (série 221).", brands:["WAGO"], supplier:"PJ Neblina" },
+  { cat:"eletrica", item:"Sensores de Presença", specs:"Sensor articulado de parede e sobrepor teto 360° para escadas, vestiários e banheiros.", brands:["Margirius","Exatron"], supplier:"Coral / Vamor" },
+  { cat:"eletrica", item:"Plugs e Tomadas Industriais", specs:"Plugs machos e fêmeas 2P+T (10A e 20A) e tomadas de embutir/sobrepor.", brands:["Pial","Margirius"], supplier:"Vamor / PJ Neblina" },
+
+  // 2. Hidráulica, Sanitários e Bombas
+  { cat:"hidraulica", item:"Tubos de PVC Soldável", specs:"Tubo PVC soldável marrom água fria bitolas de 25mm (3/4\") e 40mm (1.1/4\") em barras de 3m e 6m.", brands:["Tigre","Amanco"], supplier:"Vamor" },
+  { cat:"hidraulica", item:"Conexões de PVC", specs:"Joelhos 90° (25mm), Joelho azul c/ bucha latão (25mm x 1/2\"), Curvas 90° (25mm e 40mm), Luvas soldáveis (25mm e 40mm), Tês 90° (25mm) e Buchas de redução.", brands:["Tigre","Krona"], supplier:"Vamor" },
+  { cat:"hidraulica", item:"Registros e Válvulas", specs:"Registro de esfera soldável de PVC 25mm e Válvula de lavatório curta branca 7/8\".", brands:["Tigre","Lucrimar"], supplier:"Vamor" },
+  { cat:"hidraulica", item:"Mecanismo Caixa Acoplada", specs:"Kit completo de reparo e reposição para caixa acoplada com botão de acionamento superior.", brands:["Deca / Hydra Max","Censi"], supplier:"Vamor" },
+  { cat:"hidraulica", item:"Sifões e Vedação", specs:"Sifão plástico sanfonado/universal extensível e Fita veda-rosca teflon (18mm x 10m / 18mm x 50m).", brands:["Tigre","Blukit"], supplier:"Vamor / Ferreira Costa" },
+  { cat:"hidraulica", item:"Boias de Nível Elétricas", specs:"Boia de nível automática para controle de reservatórios/caixas d'água (cabo de 1,5m a 3m).", brands:["Anauger","Margirius"], supplier:"Loja do Condomínio" },
+  { cat:"hidraulica", item:"Bombas D'Água / Backup", specs:"Bombas centrífugas / periféricas de recalque e caixas separadoras de óleo.", brands:["Schneider","Dancor"], supplier:"Loja do Condomínio / Hidrovital" },
+
+  // 3. Pneumática, Lavagem e Compressores
+  { cat:"pneumatica", item:"Mangueiras de Ar Comprimido", specs:"Mangueira pneumática trançada/borracha de 10 metros e 20 metros com terminais prensados 1/4\" NPT.", brands:["Goodyear","Continental"], supplier:"Emídio" },
+  { cat:"pneumatica", item:"Mangueira de Lava-Jato", specs:"Mangueira de alta pressão com trama de aço para lavadoras de veículos (1/2\" e 3/8\").", brands:["Kärcher","Gates"], supplier:"Emídio" },
+  { cat:"pneumatica", item:"Terminais e Bicos", specs:"Terminais roscados padrão Kärcher, bicos leque para lavagem e pistolas de ar comprimido com bico longo.", brands:["Kärcher","Schweers"], supplier:"Emídio / Ponto das Ferramentas" },
+  { cat:"pneumatica", item:"Correias Industriais", specs:"Correias em \"V\" perfil industrial modelo A-36 (para bombas de lavagem e compressores).", brands:["Gates","Goodyear"], supplier:"Emídio" },
+
+  // 4. Ferragens, Fixação, Vedação e Ferramentas
+  { cat:"ferragens", item:"Fechaduras", specs:"Fechadura externa completa com espelho/maçaneta linha Concept 406-40CE (broca 40mm).", brands:["Pado"], supplier:"Vamor" },
+  { cat:"ferragens", item:"Cadeados", specs:"Cadeados de latão maciço nos tamanhos 20mm, 25mm e 30mm com chave (travamento de dispensers e armários DML).", brands:["Pado","Papaiz"], supplier:"Vamor" },
+  { cat:"ferragens", item:"Buchas e Parafusos", specs:"Buchas para drywall/gesso (8mm), buchas para parede/alvenaria (6mm e 8mm) e parafusos estrela/phillips.", brands:["Fischer","Ciser"], supplier:"Vamor / Ferreira Costa" },
+  { cat:"ferragens", item:"Bits e Brocas", specs:"Bits Phillips PH2 x 80mm (jogo com 5 peças) e Brocas de vídia para martelete SDS-Plus (8mm).", brands:["Worker","Vonder","Irwin"], supplier:"Vamor" },
+  { cat:"ferragens", item:"Bolsa / Mochila de Ferramentas", specs:"Mochila morral reforçada para ferramentas, medidas 480 x 400 x 230 mm.", brands:["Vonder"], supplier:"Vamor" },
+  { cat:"ferragens", item:"Selantes, Colas e Tintas", specs:"Selante PU branco (cartucho 400g), Adesivo de Silicone acético e Tinta spray.", brands:["Tekbond","Quartzolit"], supplier:"Vamor" },
+  { cat:"ferragens", item:"Abraçadeiras", specs:"Abraçadeiras de nylon (enforca-gato) e abraçadeiras metálicas tipo rosca sem fim.", brands:["HellermannTyton"], supplier:"Vamor" },
+
+  // 5. Higiene, Purificadores e Equipamentos de Conforto
+  { cat:"higiene", item:"Refil para Purificadores", specs:"Elementos filtrantes bacteriológicos de carvão ativado / polipropileno tipo \"Girou Trocou\" (compatíveis com IBBL/Everest).", brands:["IBBL","Hidrofiltros"], supplier:"Ativa Soluções" },
+  { cat:"higiene", item:"Dispensers de Sabonete / Papel", specs:"Suportes para papel higiênico rolão (300m/500m), toalheiros interfolhados e dispensers de sabonete líquido (800ml).", brands:["Premisse","Nobre"], supplier:"Ativa Soluções / Vamor" },
+  { cat:"higiene", item:"Acessórios para Lavadoras de Piso", specs:"Peneiras de contenção, discos e raspadores para autolavadoras industriais de piso.", brands:["Alfa Tennant","Kärcher"], supplier:"Ativa Soluções" },
+  { cat:"higiene", item:"Cortinas de Ar", specs:"Cortinas de ar de 90cm e 120cm com controle remoto (para isolamento térmico de showroom e repasse).", brands:["Elgin","Agratto"], supplier:"Ferreira Costa / Ponto das Ferramentas" },
+];
+
 const chipsEl = document.getElementById('chips');
 const gridEl = document.getElementById('grid');
 const searchEl = document.getElementById('search');
 const emptyEl = document.getElementById('empty');
 const emptyTermEl = document.getElementById('emptyTerm');
 const resultCountEl = document.getElementById('resultCount');
+const matChipsEl = document.getElementById('matChips');
+const materialsListEl = document.getElementById('materialsList');
+const materialsEmptyEl = document.getElementById('materialsEmpty');
+const materialsEmptyTermEl = document.getElementById('materialsEmptyTerm');
 
 let activeCat = 'all';
+let activeMatCat = 'all';
 
 function buildChips(){
   const all = document.createElement('div');
@@ -551,6 +643,85 @@ function matches(supplier, term){
   return words.every(w => haystack.includes(w));
 }
 
+function buildMatChips(){
+  const all = document.createElement('div');
+  all.className = 'chip active';
+  all.dataset.cat = 'all';
+  all.innerHTML = `<span class="sw" style="background:var(--accent)"></span>Todos (${MATERIALS.length})`;
+  all.onclick = () => setMatCat('all');
+  matChipsEl.appendChild(all);
+
+  Object.entries(MATERIAL_CATEGORIES).forEach(([key, meta]) => {
+    const count = MATERIALS.filter(m => m.cat === key).length;
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.dataset.cat = key;
+    chip.style.color = meta.color;
+    chip.innerHTML = `<span class="sw" style="background:${meta.color}"></span>${meta.label} (${count})`;
+    chip.onclick = () => setMatCat(key);
+    matChipsEl.appendChild(chip);
+  });
+}
+
+function setMatCat(cat){
+  activeMatCat = cat;
+  matChipsEl.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.cat === cat));
+  renderMaterials();
+}
+
+function materialMatches(m, term){
+  if(!term) return true;
+  const haystack = normalizeText([
+    m.item,
+    MATERIAL_CATEGORIES[m.cat].label,
+    m.specs,
+    m.brands.join(' '),
+    m.supplier,
+  ].join(' '));
+  const words = normalizeText(term).split(/\s+/).filter(Boolean);
+  return words.every(w => haystack.includes(w));
+}
+
+function buildMaterialRow(m){
+  const meta = MATERIAL_CATEGORIES[m.cat];
+  const row = document.createElement('div');
+  row.className = 'material-row';
+  row.style.borderLeftColor = meta.color;
+
+  const brandsHtml = m.brands.map(b => `<span class="item-tag">${b}</span>`).join('');
+
+  row.innerHTML = `
+    <div class="material-top">
+      <p class="material-name">${m.item}</p>
+      <span class="material-cat" style="background:${meta.color}22; color:${meta.color}">${meta.label}</span>
+    </div>
+    <p class="material-specs">${m.specs}</p>
+    <div class="material-brands">${brandsHtml}</div>
+    <div class="material-foot">
+      <span class="material-supplier">→ ${m.supplier}</span>
+    </div>
+  `;
+  return row;
+}
+
+function renderMaterials(){
+  const term = searchEl.value.trim();
+  materialsListEl.innerHTML = '';
+  let visible = 0;
+
+  MATERIALS.forEach(m => {
+    const catOk = activeMatCat === 'all' || m.cat === activeMatCat;
+    const searchOk = materialMatches(m, term);
+    if(catOk && searchOk){
+      materialsListEl.appendChild(buildMaterialRow(m));
+      visible++;
+    }
+  });
+
+  materialsEmptyEl.classList.toggle('show', visible === 0);
+  materialsEmptyTermEl.textContent = term ? `"${term}"` : 'esse filtro';
+}
+
 function buildCard(s){
   const meta = CATEGORIES[s.cat];
   const card = document.createElement('div');
@@ -570,9 +741,6 @@ function buildCard(s){
         <span class="contact-phone">${c.phone}</span>
       </div>
       <div class="contact-actions">
-        <a class="icon-btn" href="${telHref(c.phone)}" title="Ligar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        </a>
         ${c.phone ? `
         <a class="icon-btn whatsapp" href="${waHref(c.phone)}" title="Chamar no WhatsApp" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.86.505 3.65 1.462 5.212L2 22l4.911-1.436A9.941 9.941 0 0 0 12.001 22C17.523 22 22 17.523 22 12S17.523 2 12.001 2zm0 18.09c-1.6 0-3.14-.43-4.478-1.242l-.322-.19-2.914.852.87-2.858-.207-.33A8.076 8.076 0 0 1 3.91 12c0-4.465 3.626-8.09 8.091-8.09 4.464 0 8.09 3.625 8.09 8.09 0 4.465-3.626 8.09-8.09 8.09z"/></svg>
@@ -636,9 +804,12 @@ function render(){
     document.getElementById('grid-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   wasSearching = isSearching;
+
+  renderMaterials();
 }
 
 buildChips();
+buildMatChips();
 render();
 searchEl.addEventListener('input', render);
 
