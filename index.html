@@ -326,42 +326,15 @@
     </div>
   </section>
 
-  <section id="flowSection">
-    <div class="section-head"><span class="idx">02</span><h2>Fluxo rápido — material elétrico</h2></div>
-    <p class="section-desc">Passo a passo de decisão para o caso mais comum: precisa de material elétrico, e agora?</p>
-    <div class="flow">
-      <div class="flow-step">
-        <span class="fnum">1</span>
-        <span class="ftext">Precisa de <b>material elétrico</b>?</span>
-      </div>
-      <div class="flow-step">
-        <span class="fnum">2</span>
-        <span class="ftext">Ligue primeiro para <b>PJNeblina (Jairo)</b> — é o fornecedor principal</span>
-      </div>
-      <div class="flow-step">
-        <span class="fnum">3</span>
-        <span class="ftext">Não tem em estoque? Cote com <b>Jaguar</b> e <b>Mafema</b></span>
-      </div>
-      <div class="flow-step">
-        <span class="fnum">4</span>
-        <span class="ftext">É <b>drive ou iluminação específica</b>? Vá direto na <b>MODEON</b></span>
-      </div>
-      <div class="flow-step">
-        <span class="fnum">5</span>
-        <span class="ftext">Item muito barato? Priorize <b>PJNeblina</b></span>
-      </div>
-    </div>
-  </section>
-
   <section id="grid-section">
-    <div class="section-head"><span class="idx">03</span><h2 id="gridTitle">Fornecedores</h2></div>
+    <div class="section-head"><span class="idx">02</span><h2 id="gridTitle">Fornecedores</h2></div>
     <p class="section-desc" id="gridDesc">16 fornecedores cadastrados. Além do nome, dá para buscar por item (ex: "cabo pp", "dispenser de sabonete líquido"). Clique no telefone para ligar, no WhatsApp para chamar, ou copie o número.</p>
     <div class="grid" id="grid"></div>
     <div class="empty" id="empty">Nenhum fornecedor encontrado para <b id="emptyTerm"></b>. Tente outro termo ou limpe o filtro de categoria.</div>
   </section>
 
   <section id="materialsSection">
-    <div class="section-head"><span class="idx">04</span><h2>Catálogo de Materiais por Item</h2></div>
+    <div class="section-head"><span class="idx">03</span><h2>Catálogo de Materiais por Item</h2></div>
     <p class="section-desc">Consulta rápida por item: especificação técnica, marcas usadas e fornecedor a priorizar. Baseado no levantamento de 313 notas fiscais do Grupo VIA1.</p>
 
     <div class="mat-note"><b>Observação de cotação:</b> a MODEON é sempre o último caso — só cote com ela se nenhum outro fornecedor listado tiver o item disponível.</div>
@@ -770,7 +743,6 @@ function buildCard(s){
 }
 
 const rulesSection = document.getElementById('rulesSection');
-const flowSection = document.getElementById('flowSection');
 const gridTitle = document.getElementById('gridTitle');
 let wasSearching = false;
 
@@ -797,7 +769,6 @@ function render(){
   // Enquanto o usuário está buscando, some com Regras/Fluxo para o resultado
   // aparecer imediatamente na tela, sem precisar rolar a página.
   rulesSection.style.display = isSearching ? 'none' : '';
-  flowSection.style.display = isSearching ? 'none' : '';
   gridTitle.textContent = isSearching ? `Resultados para "${term}"` : 'Fornecedores';
 
   if(isSearching && !wasSearching){
